@@ -1,0 +1,31 @@
+import { getImagesByQuery } from "./js/pixabay-api.js";
+import { createGallery, clearGallery, showLoader, hideLoader, showNoResults } from "./js/render-functions.js";
+
+const form = document.querySelector(".form");
+const input = form.querySelector("input[name='search-text']");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const query = input.value.trim();
+
+  if (!query) return;
+
+  clearGallery();
+  showLoader();
+
+  try {
+    const images = await getImagesByQuery(query);
+
+    if (images.length === 0) {
+      showNoResults();
+    } else {
+      createGallery(images);
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    hideLoader();
+  }
+});
+
+iziToast.success({ message: "Бібліотека iziToast працює!" });
